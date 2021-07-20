@@ -1,24 +1,25 @@
-﻿using Prism.Mvvm;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+using Prism;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
+
+using PrismMetroSample.Infrastructure.Events;
 using PrismMetroSample.Infrastructure.Models;
 using PrismMetroSample.Infrastructure.Services;
-using System.Collections.ObjectModel;
-using Prism.Events;
-using PrismMetroSample.Infrastructure.Events;
-using System;
-using Prism;
-using System.Windows;
-using Prism.Services.Dialogs;
-using Prism.Commands;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace PrismMetroSample.MedicineModule.ViewModels
 {
-    public class MedicineMainContentViewModel : BindableBase,IActiveAware
+    public class MedicineMainContentViewModel : BindableBase, IActiveAware
     {
         #region Fields
 
-        private readonly IMedicineSerivce _medicineSerivce;
+        private readonly IMedicineService _medicineSerivce;
         private readonly IEventAggregator _ea;
         private readonly IDialogService _dialogService;
 
@@ -29,30 +30,28 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         #region Properties
 
 
-        private ObservableCollection<Medicine> _allMedicines=new ObservableCollection<Medicine>();
+        private ObservableCollection<Medicine> _allMedicines = new ObservableCollection<Medicine>();
 
         public ObservableCollection<Medicine> AllMedicines
         {
-            get { return _allMedicines; }
-            set { _allMedicines = value; }
+            get => _allMedicines;
+            set => _allMedicines = value;
         }
 
-
-
-        bool _isActive;
+        private bool _isActive;
         public bool IsActive
         {
-            get { return _isActive; }
+            get => _isActive;
             set
             {
                 _isActive = value;
                 if (_isActive)
                 {
-                    _dialogService.ShowDialog("SuccessDialog", new DialogParameters($"message={"视图被激活了"}"), null);
+                    _dialogService.ShowDialog("SuccessDialog", new DialogParameters($"message={"The view is activated"}"), null);
                 }
                 else
                 {
-                    _dialogService.ShowDialog("WarningDialog", new DialogParameters($"message={"视图失效了"}"), null);
+                    _dialogService.ShowDialog("WarningDialog", new DialogParameters($"message={"The view is invalid"}"), null);
                 }
                 IsActiveChanged?.Invoke(this, new EventArgs());
             }
@@ -66,21 +65,17 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         public DelegateCommand LoadCommand =>
             _loadCommand ?? (_loadCommand = new DelegateCommand(ExecuteLoadCommand));
 
-         void ExecuteLoadCommand()
-        {
+        private void ExecuteLoadCommand() =>
             //TaskExtension for async void Command 
-            ALongTask().Await( completedCallback:() =>
+            ALongTask().Await(completedCallback: () =>
             {
-                this.AllMedicines.AddRange(_medicineSerivce.GetAllMedicines());
-            }, errorCallback:null,configureAwait:true);
-
-
-        }
+                AllMedicines.AddRange(_medicineSerivce.GetAllMedicines());
+            }, errorCallback: null, configureAwait: true);
 
         private async Task ALongTask()
         {
-            await Task.Delay(3000);//模拟耗时操作
-            Debug.WriteLine("耗时操作完成");
+            await Task.Delay(3000);//Simulation takes time to operate
+            Debug.WriteLine("Time-consuming operations are complete");
         }
 
         #endregion
@@ -93,21 +88,18 @@ namespace PrismMetroSample.MedicineModule.ViewModels
 
 
 
-        public MedicineMainContentViewModel(IMedicineSerivce medicineSerivce,IEventAggregator ea,IDialogService dialogService)
+        public MedicineMainContentViewModel(IMedicineService medicineSerivce, IEventAggregator ea, IDialogService dialogService)
         {
             _medicineSerivce = medicineSerivce;
             _ea = ea;
-            _dialogService = dialogService;           
-            _ea.GetEvent<MedicineSentEvent>().Subscribe(MedicineMessageReceived);//订阅事件
-            this.AllMedicines = new ObservableCollection<Medicine>();
+            _dialogService = dialogService;
+            _ea.GetEvent<MedicineSentEvent>().Subscribe(MedicineMessageReceived);//Subscribe to events
+            AllMedicines = new ObservableCollection<Medicine>();
         }
 
         /// <summary>
-        /// 事件消息接受函数
+        /// The event message accepts the function
         /// </summary>
-        private void MedicineMessageReceived(Medicine medicine)
-        {
-            this.AllMedicines?.Add(medicine);
-        }
+        private void MedicineMessageReceived(Medicine medicine) => AllMedicines?.Add(medicine);
     }
 }

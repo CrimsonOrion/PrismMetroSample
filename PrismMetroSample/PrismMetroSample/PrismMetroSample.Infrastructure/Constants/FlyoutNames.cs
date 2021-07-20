@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PrismMetroSample.Infrastructure.Constants
+﻿namespace PrismMetroSample.Infrastructure.Constants
 {
-   public static class FlyoutNames
+    public static class FlyoutNames
     {
-        public static string PatientDetailFlyout = "PatientDetailFlyout";
+        public const string PatientDetailFlyout = "PatientDetailFlyout";
 
-        public static string SearchMedicineFlyout = "SearchMedicineFlyout";
+        public const string SearchMedicineFlyout = "SearchMedicineFlyout";
     }
 }

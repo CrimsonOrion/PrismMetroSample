@@ -1,19 +1,22 @@
-﻿using Prism.Ioc;
-using Prism.Unity;
-using Prism.Modularity;
-using System.Windows;
-using PrismMetroSample.Infrastructure.Services;
-using PrismMetroSample.Infrastructure;
-using PrismMetroSample.Shell.Views.Login;
-using Prism.Regions;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
+
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Regions;
+using Prism.Unity;
+
+using PrismMetroSample.Infrastructure;
 using PrismMetroSample.Infrastructure.CustomerRegionAdapters;
-using PrismMetroSample.Shell.Views.Dialogs;
+using PrismMetroSample.Infrastructure.Services;
 using PrismMetroSample.Shell.ViewModels.Dialogs;
+using PrismMetroSample.Shell.Views.Dialogs;
+using PrismMetroSample.Shell.Views.Login;
+
 using Unity;
 using Unity.Interception;
-using Unity.Interception.Interceptors.InstanceInterceptors.InterfaceInterception;
 using Unity.Interception.ContainerIntegration;
+using Unity.Interception.Interceptors.InstanceInterceptors.InterfaceInterception;
 using Unity.Interception.PolicyInjection;
 
 namespace PrismMetroSample.Shell
@@ -24,34 +27,29 @@ namespace PrismMetroSample.Shell
     public partial class App : PrismApplication
     {
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            base.OnStartup(e);
-        }
+        protected override void OnStartup(StartupEventArgs e) => base.OnStartup(e);
 
-        protected override Window CreateShell()
-        {
-            return Container.Resolve<LoginWindow>();
-        }
+        protected override Window CreateShell() => Container.Resolve<LoginWindow>();
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            var container = PrismIocExtensions.GetContainer(containerRegistry);
+            IUnityContainer container = PrismIocExtensions.GetContainer(containerRegistry);
             container.AddNewExtension<Interception>()//add Extension Aop
-                //注册服务和添加显示拦截
-                .RegisterType<IMedicineSerivce, MedicineSerivce>(new Interceptor<InterfaceInterceptor>(), new InterceptionBehavior<PolicyInjectionBehavior>())
+                                                     //Sign up for the service and add display blocking
+                .RegisterType<IMedicineService, MedicineService>(new Interceptor<InterfaceInterceptor>(), new InterceptionBehavior<PolicyInjectionBehavior>())
                 .RegisterType<IPatientService, PatientService>(new Interceptor<InterfaceInterceptor>(), new InterceptionBehavior<PolicyInjectionBehavior>())
-                .RegisterType<IUserService, UserService>(new Interceptor<InterfaceInterceptor>(), new InterceptionBehavior<PolicyInjectionBehavior>());
+                //.RegisterType<IUserService, UserService>(new Interceptor<InterfaceInterceptor>(), new InterceptionBehavior<PolicyInjectionBehavior>())
+                .RegisterType<IUserService, UserService>();
 
-            //注册全局命令
+            //Register the global command
             containerRegistry.RegisterSingleton<IApplicationCommands, ApplicationCommands>();
             containerRegistry.RegisterInstance<IFlyoutService>(Container.Resolve<FlyoutService>());
 
-            //注册导航
+            //Sign up for navigation
             containerRegistry.RegisterForNavigation<LoginMainContent>();
             containerRegistry.RegisterForNavigation<CreateAccount>();
 
-            //注册对话框
+            //Register the dialog box
             containerRegistry.RegisterDialog<AlertDialog, AlertDialogViewModel>();
             containerRegistry.RegisterDialog<SuccessDialog, SuccessDialogViewModel>();
             containerRegistry.RegisterDialog<WarningDialog, WarningDialogViewModel>();
@@ -77,10 +75,6 @@ namespace PrismMetroSample.Shell
             regionAdapterMappings.RegisterMapping(typeof(UniformGrid), Container.Resolve<UniformGridRegionAdapter>());
         }
 
-        protected override IModuleCatalog CreateModuleCatalog()
-        {
-            return new DirectoryModuleCatalog() { ModulePath = @".\Modules" };
-            //return new ConfigurationModuleCatalog();
-        }
+        protected override IModuleCatalog CreateModuleCatalog() => new DirectoryModuleCatalog() { ModulePath = @".\Modules" };//return new ConfigurationModuleCatalog();
     }
 }

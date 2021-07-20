@@ -9,12 +9,7 @@ namespace PrismMetroSample.Infrastructure
 
     public class ApplicationCommands : IApplicationCommands
     {
-        private CompositeCommand _showCommand=new CompositeCommand();
-
-        public CompositeCommand ShowCommand
-        {
-            get { return _showCommand; }
-        }
+        public CompositeCommand ShowCommand { get; } = new CompositeCommand();
 
     }
 }

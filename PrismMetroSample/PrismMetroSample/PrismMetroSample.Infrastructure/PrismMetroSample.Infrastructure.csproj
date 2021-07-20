@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -10,24 +10,24 @@
 
   <ItemGroup>
     <None Remove="Assets\Fonts\iconfont.ttf" />
-    <None Remove="Assets\Photos\alter.png" />
-    <None Remove="Assets\Photos\Home, homepage, menu.png" />
+    <None Remove="Assets\Photos\Alert.png" />
+    <None Remove="Assets\Photos\Button.png" />
+    <None Remove="Assets\Photos\Home.png" />
     <None Remove="Assets\Photos\success.png" />
-    <None Remove="Assets\Photos\按钮.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
-    <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.7" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="Unity.Interception" Version="5.11.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\Fonts\iconfont.ttf" />
-    <Resource Include="Assets\Photos\alter.png" />
-    <Resource Include="Assets\Photos\Home, homepage, menu.png" />
-    <Resource Include="Assets\Photos\success.png" />
-    <Resource Include="Assets\Photos\按钮.png" />
+    <Resource Include="Assets\Photos\Alert.png" />
+    <Resource Include="Assets\Photos\Home.png" />
+    <Resource Include="Assets\Photos\Success.png" />
+    <Resource Include="Assets\Photos\Button.png" />
   </ItemGroup>
 
 </Project>

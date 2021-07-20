@@ -1,5 +1,6 @@
-﻿using PrismMetroSample.Infrastructure.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using PrismMetroSample.Infrastructure.Models;
 
 namespace PrismMetroSample.Infrastructure.Services
 {
@@ -7,11 +8,11 @@ namespace PrismMetroSample.Infrastructure.Services
     {
         public List<User> GetAllUsers()
         {
-            var allUsers = new List<User>()
+            List<User> allUsers = new List<User>()
            {
-               new User(){Id=1,LoginId="Admin",PassWord="Admin123"},
-               new User(){Id=1,LoginId="Ryzen",PassWord="123456"},
-               new User(){Id=1,LoginId="Test",PassWord="Test123"},
+               new User(){Id=1,LoginId="Admin",Password="Admin123"},
+               new User(){Id=1,LoginId="Ryzen",Password="123456"},
+               new User(){Id=1,LoginId="Test",Password="Test123"},
            };
             return allUsers;
         }

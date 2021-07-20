@@ -1,12 +1,13 @@
-﻿using Prism.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+
 using PrismMetroSample.Infrastructure.Events;
 using PrismMetroSample.Infrastructure.Models;
 using PrismMetroSample.Infrastructure.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections.ObjectModel;
 
 namespace PrismMetroSample.PatientModule.ViewModels
 {
@@ -15,7 +16,7 @@ namespace PrismMetroSample.PatientModule.ViewModels
 
         #region Fields
 
-        private readonly IMedicineSerivce _medicineSerivce;
+        private readonly IMedicineService _medicineService;
         private readonly IEventAggregator _ea;
 
         #endregion
@@ -25,59 +26,53 @@ namespace PrismMetroSample.PatientModule.ViewModels
         private Patient _currentPatient;
         public Patient CurrentPatient
         {
-            get { return _currentPatient; }
-            set { SetProperty(ref _currentPatient, value); }
+            get => _currentPatient;
+            set => SetProperty(ref _currentPatient, value);
         }
 
-        private ObservableCollection<Medicine> _lstMedicines;
-        public ObservableCollection<Medicine> lstMedicines
+        private ObservableCollection<Medicine> _medicines;
+        public ObservableCollection<Medicine> Medicines
         {
-            get { return _lstMedicines; }
-            set { SetProperty(ref _lstMedicines, value); }
+            get => _medicines;
+            set => SetProperty(ref _medicines, value);
         }
 
         #endregion
 
         #region Commands
 
-        private DelegateCommand _cancleSubscribeCommand;
-        public DelegateCommand CancleSubscribeCommand =>
-            _cancleSubscribeCommand ?? (_cancleSubscribeCommand = new DelegateCommand(ExecuteCancleSubscribeCommand));
+        private DelegateCommand _cancelSubscribeCommand;
+        public DelegateCommand CancelSubscribeCommand =>
+            _cancelSubscribeCommand ?? (_cancelSubscribeCommand = new DelegateCommand(ExecuteCancelSubscribeCommand));
 
         #endregion
 
         #region  Excutes
 
-        void ExecuteCancleSubscribeCommand()
-        {
-            _ea.GetEvent<MedicineSentEvent>().Unsubscribe(MedicineMessageReceived);
-        }
+        private void ExecuteCancelSubscribeCommand() => _ea.GetEvent<MedicineSentEvent>().Unsubscribe(MedicineMessageReceived);
 
         #endregion
 
 
 
-        public PatientDetailViewModel(IEventAggregator ea, IMedicineSerivce medicineSerivce)
+        public PatientDetailViewModel(IEventAggregator ea, IMedicineService medicineSerivce)
         {
-            _medicineSerivce = medicineSerivce;
+            _medicineService = medicineSerivce;
             _ea = ea;
             _ea.GetEvent<PatientSentEvent>().Subscribe(PatientMessageReceived);
-            _ea.GetEvent<MedicineSentEvent>().Subscribe(MedicineMessageReceived,ThreadOption.PublisherThread,false,
-                medicine=>medicine.Name=="当归"|| medicine.Name== "琼浆玉露");
+            _ea.GetEvent<MedicineSentEvent>().Subscribe(MedicineMessageReceived, ThreadOption.PublisherThread, false,
+                medicine => medicine.Name == "Angelica" || medicine.Name == "Joan Yulu");
         }
 
         /// <summary>
-        /// 接受事件消息函数
+        /// Accept the event message function
         /// </summary>
-        private void MedicineMessageReceived(Medicine  medicine)
-        {
-            this.lstMedicines?.Add(medicine);
-        }
+        private void MedicineMessageReceived(Medicine medicine) => Medicines?.Add(medicine);
 
         private void PatientMessageReceived(Patient patient)
         {
-            this.CurrentPatient = patient;
-            this.lstMedicines = new ObservableCollection<Medicine>(_medicineSerivce.GetRecipesByPatientId(this.CurrentPatient.Id).FirstOrDefault().LstMedicines);
+            CurrentPatient = patient;
+            Medicines = new ObservableCollection<Medicine>(_medicineService.GetRecipesByPatientId(CurrentPatient.Id).FirstOrDefault().Medicines);
         }
     }
 }

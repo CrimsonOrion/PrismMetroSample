@@ -1,9 +1,8 @@
-﻿using Prism.Commands;
+﻿using System;
+
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace PrismMetroSample.Shell.ViewModels.Dialogs
 {
@@ -21,15 +20,15 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
         private string _message;
         public string Message
         {
-            get { return _message; }
-            set { SetProperty(ref _message, value); }
+            get => _message;
+            set => SetProperty(ref _message, value);
         }
 
         private string _title = "Notification";
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
         #endregion
 
@@ -43,14 +42,18 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
 
         #region  Excutes
 
-        void ExecuteCloseDialogCommand(string parameter)
+        private void ExecuteCloseDialogCommand(string parameter)
         {
             ButtonResult result = ButtonResult.None;
 
             if (parameter?.ToLower() == "true")
+            {
                 result = ButtonResult.Yes;
+            }
             else if (parameter?.ToLower() == "false")
+            {
                 result = ButtonResult.No;
+            }
 
             RaiseRequestClose(new DialogResult(result));
         }
@@ -58,24 +61,15 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
         #endregion
 
 
-        public virtual void RaiseRequestClose(IDialogResult dialogResult)
-        {
-            RequestClose?.Invoke(dialogResult);
-        }     
+        public virtual void RaiseRequestClose(IDialogResult dialogResult) => RequestClose?.Invoke(dialogResult);
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+        public bool CanCloseDialog() => true;
 
         public void OnDialogClosed()
         {
-            
+
         }
 
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-            Message = parameters.GetValue<string>("message");
-        }
+        public void OnDialogOpened(IDialogParameters parameters) => Message = parameters.GetValue<string>("message");
     }
 }

@@ -1,35 +1,54 @@
-﻿<metro:Flyout  x:Class="PrismMetroSample.MedicineModule.Views.SearchMedicine"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-               Header="SearchMedicine" 
-               Position="Right"              
-                FontSize="15"
-             prism:ViewModelLocator.AutoWireViewModel="True">
+﻿<metro:Flyout x:Class="PrismMetroSample.MedicineModule.Views.SearchMedicine"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:prism="http://prismlibrary.com/"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    FontSize="15"
+    Header="SearchMedicine"
+    Position="Right"
+    mc:Ignorable="d">
     <StackPanel>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBox Margin="5" Text="{Binding SearchCondition}"/>
-            <Button Grid.Column="1" FontSize="15" Margin="5" Content="Search" Command="{Binding SearchCommand}"/>
+            <TextBox
+                Margin="5"
+                Text="{Binding SearchCondition}" />
+            <Button
+                Grid.Column="1"
+                Margin="5"
+                Command="{Binding SearchCommand}"
+                Content="Search"
+                FontSize="15" />
         </Grid>
-        <DataGrid x:Name="md_dagrid" ItemsSource="{Binding CurrentMedicines}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="md_dagrid"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding CurrentMedicines}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
-                <DataGridTextColumn Header="Unit" Binding="{Binding Unit}"/>
+                <DataGridTextColumn
+                    Binding="{Binding Name}"
+                    Header="Name" />
+                <DataGridTextColumn
+                    Binding="{Binding Type}"
+                    Header="Type" />
+                <DataGridTextColumn
+                    Binding="{Binding Unit}"
+                    Header="Unit" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Add" Command="{Binding DataContext.AddMedicineCommand,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type metro:Flyout}}}" 
-                                    CommandParameter="{Binding .}"/>
+                            <Button
+                                Command="{Binding DataContext.AddMedicineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type metro:Flyout}}}"
+                                CommandParameter="{Binding .}"
+                                Content="Add" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -1,15 +1,15 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using PrismMetroSample.Infrastructure.Services;
-using PrismMetroSample.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Prism.Regions;
-using PrismMetroSample.Infrastructure;
+﻿using System.Collections.Generic;
+
+using Prism.Commands;
 using Prism.Events;
-using PrismMetroSample.Infrastructure.Events;
+using Prism.Mvvm;
+using Prism.Regions;
+
+using PrismMetroSample.Infrastructure;
 using PrismMetroSample.Infrastructure.Constants;
+using PrismMetroSample.Infrastructure.Events;
+using PrismMetroSample.Infrastructure.Models;
+using PrismMetroSample.Infrastructure.Services;
 using PrismMetroSample.PatientModule.Views;
 
 namespace PrismMetroSample.PatientModule.ViewModels
@@ -22,8 +22,8 @@ namespace PrismMetroSample.PatientModule.ViewModels
         private readonly IEventAggregator _ea;
         private readonly IRegionManager _regionManager;
         private readonly IPatientService _patientService;
-        private IRegion _region;
-        private PatientList _patientListView;
+        private readonly IRegion _region;
+        private readonly PatientList _patientListView;
 
         #endregion
 
@@ -32,15 +32,15 @@ namespace PrismMetroSample.PatientModule.ViewModels
         private IApplicationCommands _applicationCommands;
         public IApplicationCommands ApplicationCommands
         {
-            get { return _applicationCommands; }
-            set { SetProperty(ref _applicationCommands, value); }
+            get => _applicationCommands;
+            set => SetProperty(ref _applicationCommands, value);
         }
 
         private List<Patient> _allPatients;
         public List<Patient> AllPatients
         {
-            get { return _allPatients; }
-            set { SetProperty(ref _allPatients, value); }
+            get => _allPatients;
+            set => SetProperty(ref _allPatients, value);
         }
 
 
@@ -59,26 +59,26 @@ namespace PrismMetroSample.PatientModule.ViewModels
         #region  Excutes
 
         /// <summary>
-        /// DataGrid 双击按钮命令方法
+        /// DataGrid double-clicks the button command method
         /// </summary>
-        void ExecuteMouseDoubleClickCommand(Patient patient)
+        private void ExecuteMouseDoubleClickCommand(Patient patient)
         {
-            this.ApplicationCommands.ShowCommand.Execute(FlyoutNames.PatientDetailFlyout);//打开窗体
-            _ea.GetEvent<PatientSentEvent>().Publish(patient);//发布消息
+            ApplicationCommands.ShowCommand.Execute(FlyoutNames.PatientDetailFlyout);//Open the form
+            _ea.GetEvent<PatientSentEvent>().Publish(patient);//Publish the message
         }
 
         #endregion
 
 
         /// <summary>
-        /// 构造函数
+        /// Constructor
         /// </summary>
         public PatientListViewModel(IPatientService patientService, IEventAggregator ea, IApplicationCommands applicationCommands)
         {
             _ea = ea;
-            this.ApplicationCommands = applicationCommands;
+            ApplicationCommands = applicationCommands;
             _patientService = patientService;
-            this.AllPatients = _patientService.GetAllPatients();         
+            AllPatients = _patientService.GetAllPatients();
         }
 
     }

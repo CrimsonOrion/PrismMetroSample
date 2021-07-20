@@ -1,11 +1,13 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using PrismMetroSample.Infrastructure.Services;
-using PrismMetroSample.Infrastructure.Models;
-using Prism.Events;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+
 using PrismMetroSample.Infrastructure.Events;
+using PrismMetroSample.Infrastructure.Models;
+using PrismMetroSample.Infrastructure.Services;
 
 namespace PrismMetroSample.MedicineModule.ViewModels
 {
@@ -13,7 +15,7 @@ namespace PrismMetroSample.MedicineModule.ViewModels
     {
         #region Fields
 
-        private readonly IMedicineSerivce _medicineSerivce;
+        private readonly IMedicineService _medicineSerivce;
         private readonly IEventAggregator _ea;
 
         #endregion
@@ -23,22 +25,22 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         private List<Medicine> _allMedicines;
         public List<Medicine> AllMedicines
         {
-            get { return _allMedicines; }
-            set { SetProperty(ref _allMedicines, value); }
+            get => _allMedicines;
+            set => SetProperty(ref _allMedicines, value);
         }
 
         private List<Medicine> _currentMedicines;
         public List<Medicine> CurrentMedicines
         {
-            get { return _currentMedicines; }
-            set { SetProperty(ref _currentMedicines, value); }
+            get => _currentMedicines;
+            set => SetProperty(ref _currentMedicines, value);
         }
 
         private string _searchCondition;
         public string SearchCondition
         {
-            get { return _searchCondition; }
-            set { SetProperty(ref _searchCondition, value); }
+            get => _searchCondition;
+            set => SetProperty(ref _searchCondition, value);
         }
 
         #endregion
@@ -57,26 +59,20 @@ namespace PrismMetroSample.MedicineModule.ViewModels
 
         #region  Excutes
 
-        void ExecuteSearchCommand()
-        {
-            this.CurrentMedicines = this.AllMedicines.Where(t => t.Name.Contains(this.SearchCondition) || t.Type.Contains(this.SearchCondition)
-            || t.Unit.Contains(this.SearchCondition)).ToList();
-        }
+        private void ExecuteSearchCommand() => CurrentMedicines = AllMedicines.Where(t => t.Name.Contains(SearchCondition) || t.Type.Contains(SearchCondition)
+                                             || t.Unit.Contains(SearchCondition)).ToList();
 
-        void ExecuteAddMedicineCommand(Medicine currentMedicine)
-        {
-            _ea.GetEvent<MedicineSentEvent>().Publish(currentMedicine);
-        }
+        private void ExecuteAddMedicineCommand(Medicine currentMedicine) => _ea.GetEvent<MedicineSentEvent>().Publish(currentMedicine);
 
         #endregion
 
 
 
-        public SearchMedicineViewModel(IMedicineSerivce medicineSerivce, IEventAggregator ea)
+        public SearchMedicineViewModel(IMedicineService medicineSerivce, IEventAggregator ea)
         {
             _ea = ea;
             _medicineSerivce = medicineSerivce;
-            this.CurrentMedicines = this.AllMedicines = _medicineSerivce.GetAllMedicines();
+            CurrentMedicines = AllMedicines = _medicineSerivce.GetAllMedicines();
         }
     }
 }

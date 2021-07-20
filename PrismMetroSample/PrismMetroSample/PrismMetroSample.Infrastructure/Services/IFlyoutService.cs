@@ -1,8 +1,6 @@
-﻿using PrismMetroSample.Infrastructure.Interceptor.HandlerAttributes;
-
-namespace PrismMetroSample.Infrastructure.Services
+﻿namespace PrismMetroSample.Infrastructure.Services
 {
-   public interface IFlyoutService
+    public interface IFlyoutService
     {
         void ShowFlyout(string flyoutName);
     }

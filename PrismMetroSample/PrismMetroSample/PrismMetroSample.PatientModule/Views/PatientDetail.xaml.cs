@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro.Controls;
-using PrismMetroSample.Infrastructure.Services;
+
 using PrismMetroSample.Infrastructure.Constants;
-using System.Windows.Controls;
+using PrismMetroSample.Infrastructure.Services;
 
 namespace PrismMetroSample.PatientModule.Views
 {
@@ -10,11 +10,8 @@ namespace PrismMetroSample.PatientModule.Views
     /// </summary>
     public partial class PatientDetail : Flyout, IFlyoutView
     {
-        public PatientDetail()
-        {
-            InitializeComponent();
-        }
+        public PatientDetail() => InitializeComponent();
 
-        public string FlyoutName { get { return FlyoutNames.PatientDetailFlyout; } }
+        public string FlyoutName => FlyoutNames.PatientDetailFlyout;
     }
 }

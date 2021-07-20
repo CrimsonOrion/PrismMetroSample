@@ -1,19 +1,18 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using PrismMetroSample.MedicineModule.Views;
+
 using PrismMetroSample.Infrastructure.Constants;
-using System;
-using System.Windows.Controls;
+using PrismMetroSample.MedicineModule.Views;
 
 namespace PrismMetroSample.MedicineModule
 {
-    [Module(ModuleName = "MedicineModule", OnDemand =true)]
+    [Module(ModuleName = "MedicineModule", OnDemand = true)]
     public class MedicineModule : IModule
     {
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            var regionManager = containerProvider.Resolve<IRegionManager>();
+            IRegionManager regionManager = containerProvider.Resolve<IRegionManager>();
 
 
             //MedicineMainContent
@@ -29,7 +28,7 @@ namespace PrismMetroSample.MedicineModule
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+
         }
     }
 }

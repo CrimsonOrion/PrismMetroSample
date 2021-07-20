@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PrismMetroSample.Infrastructure.Models
+﻿namespace PrismMetroSample.Infrastructure.Models
 {
-   public class Patient
+    public class Patient
     {
         public int Id { get; set; }
 

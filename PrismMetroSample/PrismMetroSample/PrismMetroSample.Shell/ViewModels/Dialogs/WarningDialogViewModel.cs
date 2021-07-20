@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
 namespace PrismMetroSample.Shell.ViewModels.Dialogs
 {
-    public class WarningDialogViewModel : BindableBase,IDialogAware
+    public class WarningDialogViewModel : BindableBase, IDialogAware
     {
         #region Fields
 
@@ -21,15 +20,15 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
         private string _title = "Notification";
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         private string _message;
         public string Message
         {
-            get { return _message; }
-            set { SetProperty(ref _message, value); }
+            get => _message;
+            set => SetProperty(ref _message, value);
         }
 
         #endregion
@@ -44,7 +43,7 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
 
         #region  Excutes
 
-        async void ExecuteCloseDialogCommand()
+        private async void ExecuteCloseDialogCommand()
         {
             ButtonResult result = ButtonResult.No;
             await RaiseRequestClose(new DialogResult(result));
@@ -53,26 +52,20 @@ namespace PrismMetroSample.Shell.ViewModels.Dialogs
         #endregion
 
 
-        public async virtual Task RaiseRequestClose(IDialogResult dialogResult)
+        public virtual async Task RaiseRequestClose(IDialogResult dialogResult)
         {
             await Task.Delay(500);
             RequestClose?.Invoke(dialogResult);
         }
 
 
-        public bool CanCloseDialog()
-        {
-            return true;
-        }
+        public bool CanCloseDialog() => true;
 
         public void OnDialogClosed()
         {
 
         }
 
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-            Message = parameters.GetValue<string>("message");
-        }
+        public void OnDialogOpened(IDialogParameters parameters) => Message = parameters.GetValue<string>("message");
     }
 }

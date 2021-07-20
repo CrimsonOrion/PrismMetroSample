@@ -1,18 +1,20 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using Prism.Regions;
-using PrismMetroSample.Infrastructure.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using PrismMetroSample.Infrastructure.Constants;
+
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
+
+using PrismMetroSample.Infrastructure.Constants;
+using PrismMetroSample.Infrastructure.Models;
 
 namespace PrismMetroSample.Shell.ViewModels.Login
 {
-    public class CreateAccountViewModel : BindableBase,INavigationAware,IConfirmNavigationRequest
+    public class CreateAccountViewModel : BindableBase, INavigationAware, IConfirmNavigationRequest
     {
 
         #region Fields
@@ -28,8 +30,8 @@ namespace PrismMetroSample.Shell.ViewModels.Login
         private string _registeredLoginId;
         public string RegisteredLoginId
         {
-            get { return _registeredLoginId; }
-            set { SetProperty(ref _registeredLoginId, value); }
+            get => _registeredLoginId;
+            set => SetProperty(ref _registeredLoginId, value);
         }
 
         public bool IsUseRequest { get; set; }
@@ -54,25 +56,19 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         #region  Excutes
 
-        void ExecuteGoBackCommand()
-        {
-            _journal.GoBack();
-        }
+        private void ExecuteGoBackCommand() => _journal.GoBack();
 
-        void ExecuteLoginMainContentCommand()
-        {
-            Navigate("LoginMainContent");
-        }
+        private void ExecuteLoginMainContentCommand() => Navigate("LoginMainContent");
 
-        void ExecuteVerityCommand(object parameter)
+        private void ExecuteVerityCommand(object parameter)
         {
             if (!VerityRegister(parameter))
             {
                 return;
             }
-            this.IsUseRequest = true;
-            var Title = string.Empty;
-            _dialogService.ShowDialog("SuccessDialog", new DialogParameters($"message={"注册成功"}"), null);
+            IsUseRequest = true;
+            string Title = string.Empty;
+            _dialogService.ShowDialog("SuccessDialog", new DialogParameters($"message={"Registration was successful"}"), null);
             _journal.GoBack();
         }
 
@@ -87,34 +83,34 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         private bool VerityRegister(object parameter)
         {
-            if (string.IsNullOrEmpty(this.RegisteredLoginId))
+            if (string.IsNullOrEmpty(RegisteredLoginId))
             {
-                MessageBox.Show("LoginId 不能为空！");
+                MessageBox.Show("LoginId cannot be empty!");
                 return false;
             }
-            var passwords = parameter as Dictionary<string, PasswordBox>;
-            var password = (passwords["Password"] as PasswordBox).Password;
-            var confimPassword = (passwords["ConfirmPassword"] as PasswordBox).Password;
+            Dictionary<string, PasswordBox> passwords = parameter as Dictionary<string, PasswordBox>;
+            string password = passwords["Password"].Password;
+            string confimPassword = passwords["ConfirmPassword"].Password;
             if (string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Password 不能为空！");
+                MessageBox.Show("Password cannot be empty!");
                 return false;
             }
             if (string.IsNullOrEmpty(confimPassword))
             {
-                MessageBox.Show("ConfirmPassword 不能为空！");
+                MessageBox.Show("ConfirmPassword cannot be empty!");
                 return false;
             }
             if (password.Trim() != confimPassword.Trim())
             {
-                MessageBox.Show("两次密码不一致");
+                MessageBox.Show("The passwords are inconsistent on both occasions");
                 return false;
             }
-            Global.AllUsers.Add(new User()
+            GlobalConstants.AllUsers.Add(new User()
             {
-                Id = Global.AllUsers.Max(t => t.Id) + 1,
-                LoginId = this.RegisteredLoginId,
-                PassWord = password
+                Id = GlobalConstants.AllUsers.Max(t => t.Id) + 1,
+                LoginId = RegisteredLoginId,
+                Password = password
             });
             return true;
         }
@@ -123,38 +119,37 @@ namespace PrismMetroSample.Shell.ViewModels.Login
         private void Navigate(string navigatePath)
         {
             if (navigatePath != null)
+            {
                 _regionManager.RequestNavigate(RegionNames.LoginContentRegion, navigatePath);
+            }
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            return true;
-        }
+        public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //MessageBox.Show("退出了CreateAccount");
+            //MessageBox.Show("QuitCreateAccount");
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            //MessageBox.Show("从LoginMainContent导航到CreateAccount");
+        public void OnNavigatedTo(NavigationContext navigationContext) =>
+            //MessageBox.Show("Navigate from Login MainContent to CreateAccount");
             _journal = navigationContext.NavigationService.Journal;
-        }
 
         public void ConfirmNavigationRequest(NavigationContext navigationContext, Action<bool> continuationCallback)
         {
-            if (!string.IsNullOrEmpty(RegisteredLoginId) && this.IsUseRequest)
+            if (!string.IsNullOrEmpty(RegisteredLoginId) && IsUseRequest)
             {
-                _dialogService.ShowDialog("AlertDialog", new DialogParameters($"message={"是否需要用当前注册的用户登录?"}"), r =>
+                _dialogService.ShowDialog("AlertDialog", new DialogParameters($"message={"Do I need to sign in with a currently registered user?"}"), r =>
                 {
                     if (r.Result == ButtonResult.Yes)
+                    {
                         navigationContext.Parameters.Add("loginId", RegisteredLoginId);
+                    }
                 });
             }
             continuationCallback(true);
             //var result = false;
-            //if (MessageBox.Show("是否需要导航到LoginMainContent页面?", "Naviagte?",MessageBoxButton.YesNo) ==MessageBoxResult.Yes)
+            //if (MessageBox.Show("Do I need to navigate to the Login MainContent page?", "Navigate?",MessageBoxButton.YesNo) ==MessageBoxResult.Yes)
             //{
             //    result = true;
             //}

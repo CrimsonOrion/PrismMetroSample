@@ -7,9 +7,6 @@ namespace PrismMetroSample.MedicineModule.Views
     /// </summary>
     public partial class ShowSearchPatient : StackPanel
     {
-        public ShowSearchPatient()
-        {
-            InitializeComponent();
-        }
+        public ShowSearchPatient() => InitializeComponent();
     }
 }

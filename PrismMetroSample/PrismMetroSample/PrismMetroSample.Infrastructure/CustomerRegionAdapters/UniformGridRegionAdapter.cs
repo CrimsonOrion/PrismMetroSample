@@ -1,9 +1,7 @@
-﻿using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls.Primitives;
+
+using Prism.Regions;
 
 namespace PrismMetroSample.Infrastructure.CustomerRegionAdapters
 {
@@ -14,23 +12,17 @@ namespace PrismMetroSample.Infrastructure.CustomerRegionAdapters
 
         }
 
-        protected override void Adapt(IRegion region, UniformGrid regionTarget)
-        {
-            region.Views.CollectionChanged += (s, e) =>
-            {
-                if (e.Action==System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-                {
-                    foreach (FrameworkElement element in e.NewItems)
-                    {
-                        regionTarget.Children.Add(element);
-                    }
-                }
-            };
-        }
+        protected override void Adapt(IRegion region, UniformGrid regionTarget) => region.Views.CollectionChanged += (s, e) =>
+                                                                                 {
+                                                                                     if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                                                                                     {
+                                                                                         foreach (FrameworkElement element in e.NewItems)
+                                                                                         {
+                                                                                             regionTarget.Children.Add(element);
+                                                                                         }
+                                                                                     }
+                                                                                 };
 
-        protected override IRegion CreateRegion()
-        {
-            return new AllActiveRegion();
-        }
+        protected override IRegion CreateRegion() => new AllActiveRegion();
     }
 }

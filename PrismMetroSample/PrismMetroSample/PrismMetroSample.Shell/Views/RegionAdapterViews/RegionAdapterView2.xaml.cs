@@ -1,25 +1,12 @@
-﻿using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
+
+using Prism.Regions;
 
 namespace PrismMetroSample.Shell.Views.RegionAdapterViews
 {
     [ViewSortHint("01")]
     public partial class RegionAdapterView2 : StackPanel
     {
-        public RegionAdapterView2()
-        {
-            InitializeComponent();
-        }
+        public RegionAdapterView2() => InitializeComponent();
     }
 }

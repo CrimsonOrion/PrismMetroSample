@@ -6,8 +6,10 @@ using PrismMetroSample.Infrastructure.Models;
 namespace PrismMetroSample.Infrastructure.Services
 {
     [LogHandler]
-    public interface IUserService
+    public interface IMedicineService
     {
-        List<User> GetAllUsers();
+        List<Medicine> GetAllMedicines();
+
+        List<Recipe> GetRecipesByPatientId(int patientId);
     }
 }

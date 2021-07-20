@@ -1,11 +1,13 @@
-﻿using Prism.Mvvm;
-using Prism.Regions;
-using PrismMetroSample.Infrastructure;
-using PrismMetroSample.MedicineModule.Views;
-using PrismMetroSample.Infrastructure.Constants;
-using System.Linq;
-using Prism.Commands;
+﻿using System.Linq;
 using System.Threading.Tasks;
+
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Regions;
+
+using PrismMetroSample.Infrastructure;
+using PrismMetroSample.Infrastructure.Constants;
+using PrismMetroSample.MedicineModule.Views;
 
 namespace PrismMetroSample.MedicineModule.ViewModels
 {
@@ -25,7 +27,7 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         private bool _isShow = true;
         public bool IsShow
         {
-            get { return _isShow = true; }
+            get => _isShow = true;
             set
             {
                 SetProperty(ref _isShow, value);
@@ -43,8 +45,8 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         private IApplicationCommands _applicationCommands;
         public IApplicationCommands ApplicationCommands
         {
-            get { return _applicationCommands; }
-            set { SetProperty(ref _applicationCommands, value); }
+            get => _applicationCommands;
+            set => SetProperty(ref _applicationCommands, value);
         }
 
         #endregion
@@ -59,7 +61,7 @@ namespace PrismMetroSample.MedicineModule.ViewModels
 
         #region  Excutes
 
-        void ExecuteShowSearchLoadingCommand()
+        private void ExecuteShowSearchLoadingCommand()
         {
             _region = _regionManager.Regions[RegionNames.ShowSearchPatientRegion];
             _showSearchPatientView = (ShowSearchPatient)_region.Views.Where(t => t.GetType() == typeof(ShowSearchPatient)).FirstOrDefault();
@@ -68,9 +70,9 @@ namespace PrismMetroSample.MedicineModule.ViewModels
         #endregion
 
 
-        public ShowSearchPatientViewModel(IApplicationCommands applicationCommands,IRegionManager regionManager)
+        public ShowSearchPatientViewModel(IApplicationCommands applicationCommands, IRegionManager regionManager)
         {
-            this.ApplicationCommands = applicationCommands;
+            ApplicationCommands = applicationCommands;
             _regionManager = regionManager;
         }
 
@@ -79,7 +81,7 @@ namespace PrismMetroSample.MedicineModule.ViewModels
             if (!_region.ActiveViews.Contains(_showSearchPatientView))
             {
                 _region.Add(_showSearchPatientView);
-            }         
+            }
         }
 
         private async void DeactiveShowSearchPaitent()

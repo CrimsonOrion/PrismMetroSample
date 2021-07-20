@@ -1,17 +1,18 @@
-﻿using Prism.Commands;
+﻿using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+
 using PrismMetroSample.Infrastructure.Constants;
 using PrismMetroSample.Infrastructure.Services;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace PrismMetroSample.Shell.ViewModels.Login
 {
-    public class LoginWindowViewModel:BindableBase
+    public class LoginWindowViewModel : BindableBase
     {
 
         #region Fields
@@ -37,23 +38,19 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         #region  Excutes
 
-        void ExecuteLoginLoadingCommand()
+        private void ExecuteLoginLoadingCommand()
         {
             //_regionManager.RequestNavigate(RegionNames.LoginContentRegion, "LoginMainContent");
             IRegion region = _regionManager.Regions[RegionNames.LoginContentRegion];
             region.RequestNavigate("LoginMainContent", NavigationCompelted);
-            Global.AllUsers = _userService.GetAllUsers();
+            GlobalConstants.AllUsers = _userService.GetAllUsers();
         }
 
-        public async Task TestTask()
-        {
-            await Task.Run(() =>
-            {
-                Thread.Sleep(6000);
-                Debug.WriteLine("test");
-            });
-  
-        }
+        public async Task TestTask() => await Task.Run(() =>
+                                      {
+                                          Thread.Sleep(6000);
+                                          Debug.WriteLine("test");
+                                      });
 
         #endregion
 
@@ -69,14 +66,14 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         private void NavigationCompelted(NavigationResult result)
         {
-            if (result.Result==true)
+            if (result.Result == true)
             {
                 Thread.Sleep(1000);
-                _dialogService.Show("SuccessDialog", new DialogParameters($"message={"导航到LoginMainContent页面成功"}"), null);
+                _dialogService.Show("SuccessDialog", new DialogParameters($"message={"Navigation to the Login MainContent page was successful"}"), null);
             }
             else
             {
-                 _dialogService.Show("WarningDialog", new DialogParameters($"message={"导航到LoginMainContent页面失败"}"), null);
+                _dialogService.Show("WarningDialog", new DialogParameters($"message={"Navigation to the Login MainContent page failed"}"), null);
             }
         }
 

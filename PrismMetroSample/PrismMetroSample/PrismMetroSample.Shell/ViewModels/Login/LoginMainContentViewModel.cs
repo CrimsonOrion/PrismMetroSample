@@ -1,14 +1,15 @@
-﻿using Prism.Commands;
+﻿using System.Linq;
+using System.Windows.Controls;
+
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
+
 using PrismMetroSample.Infrastructure.Constants;
 using PrismMetroSample.Infrastructure.Models;
 using PrismMetroSample.Shell.Views;
 using PrismMetroSample.Shell.Views.Login;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Prism.Services.Dialogs;
 
 namespace PrismMetroSample.Shell.ViewModels.Login
 {
@@ -24,18 +25,18 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         #region Properties
 
-        private bool _isCanExcute;
-        public bool IsCanExcute
+        private bool _isCanExecute;
+        public bool IsCanExecute
         {
-            get { return _isCanExcute; }
-            set { SetProperty(ref _isCanExcute, value); }
+            get => _isCanExecute;
+            set => SetProperty(ref _isCanExecute, value);
         }
 
-        private User _currentUser = new User();
+        private User _currentUser = new();
         public User CurrentUser
         {
-            get { return _currentUser; }
-            set { SetProperty(ref _currentUser, value); }
+            get => _currentUser;
+            set => SetProperty(ref _currentUser, value);
         }
 
         public bool KeepAlive => true;
@@ -60,35 +61,30 @@ namespace PrismMetroSample.Shell.ViewModels.Login
 
         #region  Excutes
 
-        void ExecuteCreateAccountCommand()
+        private void ExecuteCreateAccountCommand() => Navigate("CreateAccount");
+
+        private void ExecuteLoginCommand(PasswordBox passwordBox)
         {
-            Navigate("CreateAccount");
-        }
-        void ExecuteLoginCommand(PasswordBox passwordBox)
-        {
-            if (string.IsNullOrEmpty(this.CurrentUser.LoginId))
+            if (string.IsNullOrEmpty(CurrentUser.LoginId))
             {
-                _dialogService.Show("WarningDialog", new DialogParameters($"message={"LoginId 不能为空!"}"),null);
+                _dialogService.Show("WarningDialog", new DialogParameters($"message={"LoginId cannot be empty!"}"), null);
                 return;
             }
-            this.CurrentUser.PassWord = passwordBox.Password;
-            if (string.IsNullOrEmpty(this.CurrentUser.PassWord))
+            CurrentUser.Password = passwordBox.Password;
+            if (string.IsNullOrEmpty(CurrentUser.Password))
             {
-                _dialogService.Show("WarningDialog", new DialogParameters($"message={"PassWord 不能为空!"}"), null);
+                _dialogService.Show("WarningDialog", new DialogParameters($"message={"Password cannot be empty!"}"), null);
                 return;
             }
-            else if (Global.AllUsers.Where(t => t.LoginId == this.CurrentUser.LoginId && t.PassWord == this.CurrentUser.PassWord).Count() == 0)
+            else if (GlobalConstants.AllUsers.Where(t => t.LoginId == CurrentUser.LoginId && t.Password == CurrentUser.Password).Count() == 0)
             {
-                _dialogService.Show("WarningDialog", new DialogParameters($"message={"LoginId 或者 PassWord 错误!"}"), null);
+                _dialogService.Show("WarningDialog", new DialogParameters($"message={"LoginId or Password error!"}"), null);
                 return;
             }
             ShellSwitcher.Switch<LoginWindow, MainWindow>();
         }
 
-        private void ExecuteGoForwardCommand()
-        {
-            _journal.GoForward();
-        }
+        private void ExecuteGoForwardCommand() => _journal.GoForward();
 
         #endregion
 
@@ -101,36 +97,35 @@ namespace PrismMetroSample.Shell.ViewModels.Login
         private void Navigate(string navigatePath)
         {
             if (navigatePath != null)
+            {
                 _regionManager.RequestNavigate(RegionNames.LoginContentRegion, navigatePath);
+            }
         }
 
 
 
-       private bool CanExecuteGoForwardCommand(PasswordBox passwordBox)
+        private bool CanExecuteGoForwardCommand(PasswordBox passwordBox)
         {
-            this.IsCanExcute=_journal != null && _journal.CanGoForward;
+            IsCanExecute = _journal != null && _journal.CanGoForward;
             return true;
         }
 
-        public bool IsNavigationTarget(NavigationContext navigationContext)
-        {          
-            return true;
-        }
+        public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            //MessageBox.Show("退出了LoginMainContent");
+            //MessageBox.Show("Exited Login MainContent");
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //MessageBox.Show("从CreateAccount导航到LoginMainContent");
+            //MessageBox.Show("Navigate from CreateAccount to Login MainContent");
             _journal = navigationContext.NavigationService.Journal;
 
-            var loginId= navigationContext.Parameters["loginId"] as string;
-            if (loginId!=null)
+            string loginId = navigationContext.Parameters["loginId"] as string;
+            if (loginId != null)
             {
-                this.CurrentUser = new User() { LoginId=loginId};
+                CurrentUser = new User() { LoginId = loginId };
             }
             LoginCommand.RaiseCanExecuteChanged();
         }

@@ -7,9 +7,6 @@ namespace PrismMetroSample.PatientModule.Views
     /// </summary>
     public partial class PatientList : UserControl
     {
-        public PatientList()
-        {
-            InitializeComponent();
-        }
+        public PatientList() => InitializeComponent();
     }
 }

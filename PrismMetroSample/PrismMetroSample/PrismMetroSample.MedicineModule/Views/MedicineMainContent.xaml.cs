@@ -7,9 +7,6 @@ namespace PrismMetroSample.MedicineModule.Views
     /// </summary>
     public partial class MedicineMainContent : UserControl
     {
-        public MedicineMainContent()
-        {
-            InitializeComponent();
-        }
+        public MedicineMainContent() => InitializeComponent();
     }
 }
